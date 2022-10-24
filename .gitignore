@@ -1,2 +1,4 @@
 venv/
 .DS_Store
+sentiment-analysis-lr-model.pkl
+sentiment-analysis-lr-vocabulary.pkl

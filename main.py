@@ -1,3 +1,6 @@
+from ast import main
+from multiprocessing.spawn import _main
+from tkinter.tix import MAIN
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score, f1_score, confusion_matrix
 from sklearn.linear_model import LogisticRegression
@@ -6,38 +9,29 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score, f1_score, confusion_matrix
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
 import numpy as np
 import pandas as pd
 import seaborn as sn
 import matplotlib.pyplot as plt
 import pickle
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-
-
-import re
-import math
-
 import re
 import math
 
 np.random.seed(1)
 
-df_ = pd.read_csv('facebook_sentiment.csv')
+df_ = pd.read_csv('facebook_sentiment_labeled_20221024103703-164680.csv', encoding = 'unicode_escape', engine ='python')
 
-classes=["positive","negative","neutral"]
+classes = ["positive", "negative", "neutral"]
 
 df = df_[['sentimental', 'text']].copy()
-# df['sentimental'].hist()
+df['sentimental'].hist()
 target_map = {'positive': 1, 'negative': 0, 'neutral': 2}
 df['target'] = df['sentimental'].map(target_map)
 
 # 清洗语料库
 for i in range(0, df.shape[0]):
-    _text = df['text'][i]
-    _result: float = df['target'][i]
-    if (type(_text) == float or math.isnan(_result)):
-        df.drop(i, inplace=True)
-        continue
     df['text'][i] = re.sub('[^a-zA-Z]', ' ', df['text'][i])
 
 
@@ -71,6 +65,7 @@ def plot_cm(cm):
     ax = sn.heatmap(df_cm, annot=True, fmt='g')
     ax.set_xlabel('Predicted')
     ax.set_ylabel("Target")
+
 
 plot_cm(cm)
 cm_test = confusion_matrix(Y_test, P_test, normalize='true')
